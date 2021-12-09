@@ -14,7 +14,7 @@
         <div class="form">
             <h2>{{ object.teamname }}</h2>
             <div class="single-content-details">
-                <p>Captain: {{ object.user.first_name }}</p>
+                <p>Captain: {{ object.user.first_name }} {{ object.user.last_name }}</p>
                 <p>Number of participant(s): {{ object.usercount }}</p>
                 <p>Date Registered: {{ object.created_at }}</p>
                 <p>Participants:
