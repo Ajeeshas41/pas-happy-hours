@@ -1,0 +1,31 @@
+{% extends "main/base.html" %} {% load static %} {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'user/style/user.css' %}"> {% endblock style %} {% block container %}
+<div class="box">
+
+    <div class="square" style="--i:0;"></div>
+    <div class="square" style="--i:1;"></div>
+    <div class="square" style="--i:2;"></div>
+    <div class="square" style="--i:3;"></div>
+    <div class="square" style="--i:4;"></div>
+    <div class="square" style="--i:5;"></div>
+
+
+    <div class="child-container">
+        <div class="form">
+            <h2>{{ object.teamname }}</h2>
+            <div class="single-content-details">
+                <p>Captain: {{ object.user.first_name }}</p>
+                <p>Number of participant(s): {{ object.usercount }}</p>
+                <p>Date Registered: {{ object.created_at }}</p>
+                <p>Participants:
+                    <ul class="participant-list">
+                        {% for p in object.participants.all %}
+                        <li>{{ p.user.first_name }} {{ p.user.last_name }}</li>
+                        {% endfor %}
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock container %}

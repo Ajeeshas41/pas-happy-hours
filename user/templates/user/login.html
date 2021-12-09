@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'user/style/user.css' %}">
+{% endblock style %}
+
+
+{% block container %}
+  
+    <div class="box">
+      
+      <div class="square" style="--i:0;"></div>
+      <div class="square" style="--i:1;"></div>
+      <div class="square" style="--i:2;"></div>
+      <div class="square" style="--i:3;"></div>
+      <div class="square" style="--i:4;"></div>
+      <div class="square" style="--i:5;"></div>
+      
+      <div class="child-container"> 
+        <div class="form"> 
+          <h2>LOGIN</h2>
+          <form action="" method="post">
+            {% csrf_token %}
+            <div class="inputBx">
+              {{ form.username }}
+              <span>{{ form.username.label }}</span>
+              <i class="fas fa-user-circle"></i>
+            </div>
+            {{ form.username.errors }}
+            <div class="inputBx password">
+              {{ form.password }}
+              <span>Password</span>
+              <a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
+              <i class="fas fa-key"></i>
+            </div>
+            {{ form.password.errors }}
+            <div class="inputBx">
+              <input type="submit" value="Log in"> 
+            </div>
+          </form>
+          <!-- <p>Forgot password? <a href="#">Click Here</a></p> -->
+          <p>Don't have an account <a href="{% url 'register-user' %}">Sign up</a></p>
+        </div>
+      </div>
+      </div>
+
+{% endblock container %}
+
+{% block script %}
+    <script>
+        function show_hide_password(target){
+            var input = document.getElementById('id_password');
+            if (input.getAttribute('type') == 'password') {
+                target.classList.add('view');
+                input.setAttribute('type', 'text');
+            } else {
+                target.classList.remove('view');
+                input.setAttribute('type', 'password');
+            }
+            return false;
+        }
+    </script>
+{% endblock script %}
