@@ -10,7 +10,7 @@
         <div class="single-content">
             <h3>{{ team.teamname }}</h3>
             <div class="single-content-details">
-                <p>Captain: {{ team.user.first_name }}</p>
+                <p>Captain: {{ team.user.first_name }} {{ team.user.last_name }}</p>
                 <p>Participants: {% for p in team.participants.all %}
                     <span>{{ p.user.first_name }}, </span> {% endfor %}
                 </p>
