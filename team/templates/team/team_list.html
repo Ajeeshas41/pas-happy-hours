@@ -6,7 +6,11 @@
         <h2>Team List</h2>
     </div>
     <div class="sub-container-body">
-        {% for team in teams %}
+        {% if not teams %}
+        <div class="sub-container-body-message">
+            No Team Available
+        </div>
+        {% endif %} {% for team in teams %}
         <div class="single-content">
             <h3>{{ team.teamname }}</h3>
             <div class="single-content-details">
