@@ -1,8 +1,24 @@
 {% extends "main/base.html" %} {% block container %}
-<div class="">
-    <h1 class="main-heading">Welcome to PAS Happy Hours | Virtual Games – Game of Genres | Music Mania</h1>
-    <div class="rules">
-        <p>Results are not available at the moment. Please check back on 17th December 2021</p>
+<div class="sub-container">
+    <div class="sub-container-heading">
+        <h2>Result</h2>
+    </div>
+    <div class="sub-container-body">
+        {% if not result %}
+        <div class="sub-container-body-message">
+            Results are not available at the moment. Please check back on 17th December 2021
+        </div>
+        <!-- {% endif %} {% for team in teams %}
+        <div class="single-content">
+            <h3>{{ team.teamname }}</h3>
+            <div class="single-content-details">
+                <p>Captain: {{ team.user.first_name }} {{ team.user.last_name }}</p>
+                <p>Participants: {% for p in team.participants.all %}
+                    <span>{{ p.user.first_name }}, </span> {% endfor %}
+                </p>
+            </div>
+        </div>
+        {% endfor %} -->
     </div>
 </div>
 {% endblock container %}
