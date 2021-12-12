@@ -11,6 +11,7 @@ class UserLoginView(SuccessMessageMixin, LoginView):
     authentication_form = UserLoginForm
     success_message = 'Succesfully Logged In'
 
+
 def register_user(request):
 
     if request.method == 'POST':
