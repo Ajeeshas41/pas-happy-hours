@@ -61,6 +61,10 @@
         color: #ffc;
     }
     
+    #nav-selected {
+        color: rgb(57, 61, 4);
+    }
+    
     #custom-container {
         position: absolute;
         top: 0;
