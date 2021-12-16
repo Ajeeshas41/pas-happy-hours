@@ -1,82 +1,74 @@
-{% extends "main/base.html" %}
-{% load static %}
+{% extends "main/base.html" %} {% load static %} {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'user/style/user.css' %}"> {% endblock style %} {% block container %}
 
-{% block style %}
-    <link rel="stylesheet" type="text/css" href="{% static 'user/style/user.css' %}">
-{% endblock style %}
+<div class="box">
 
+    <div class="square" style="--i:0;"></div>
+    <div class="square" style="--i:1;"></div>
+    <div class="square" style="--i:2;"></div>
+    <div class="square" style="--i:3;"></div>
+    <div class="square" style="--i:4;"></div>
+    <div class="square" style="--i:5;"></div>
 
-{% block container %}
-  
-    <div class="box">
-      
-      <div class="square" style="--i:0;"></div>
-      <div class="square" style="--i:1;"></div>
-      <div class="square" style="--i:2;"></div>
-      <div class="square" style="--i:3;"></div>
-      <div class="square" style="--i:4;"></div>
-      <div class="square" style="--i:5;"></div>
-      
-      <div class="child-container"> 
-        <div class="form"> 
-          <h2>User Registration</h2>
-          <form action="" method="post">
-            {% csrf_token %}
-            <div class="inputBx">
-              {{ form.username }}
-              <span>{{ form.username.label }}</span>
-              <i class="fas fa-user-circle"></i>
-            </div>
-            {{ form.username.errors }}
-            <div class="inputBx">
-              {{ form.first_name }}
-              <span>{{ form.first_name.label }}</span>
-              <i class="fas fa-chess-knight"></i>
-            </div>
-            {{ form.first_name.errors }}
-            <div class="inputBx">
-                {{ form.last_name }}
-                <span>{{ form.last_name.label }}</span>
-                <i class="fas fa-chess-knight"></i>
-              </div>
-              {{ form.last_name.errors }}
-            <div class="inputBx password">
-              {{ form.password1 }}
-              <span>Password</span>
-              <a href="#" class="password-control" tabindex="-1"  onclick="return show_hide_password(this);"></a>
-              <i class="fas fa-key"></i>
-            </div>
-            {{ form.password1.errors }}
-            <div class="inputBx password">
-              {{ form.password2 }}
-              <span>Confirm Password</span>
-              <a href="#" class="password-control" tabindex="-1" onclick="return show_hide_password(this);"></a>
-              <i class="fas fa-key"></i>
-            </div>
-            {{ form.password2.errors }}
-            <div class="inputBx">
-              <input type="submit" value="Register"> 
-            </div>
-          </form>
-          <p>Already have an account <a href="{% url 'login' %}">Sign in</a></p>
+    <div class="child-container">
+        <div class="form">
+            <h2>User Registration</h2>
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="inputBx">
+                    {{ form.username }}
+                    <span>{{ form.username.label }}</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                {{ form.username.errors }}
+                <div class="inputBx">
+                    {{ form.first_name }}
+                    <span>{{ form.first_name.label }}</span>
+                    <i class="fas fa-chess-knight"></i>
+                </div>
+                {{ form.first_name.errors }}
+                <div class="inputBx">
+                    {{ form.last_name }}
+                    <span>{{ form.last_name.label }}</span>
+                    <i class="fas fa-chess-knight"></i>
+                </div>
+                {{ form.last_name.errors }}
+                <div class="inputBx password">
+                    {{ form.password1 }}
+                    <span>Password</span>
+                    <a href="#" class="password-control" tabindex="-1" onclick="return show_hide_password(this);"></a>
+                    <i class="fas fa-key"></i>
+                </div>
+
+                <div style="padding:0 20px">{{ form.password1.help_text }}</div> {{ form.password1.errors }}
+                <div class="inputBx password">
+                    {{ form.password2 }}
+                    <span>Confirm Password</span>
+                    <a href="#" class="password-control" tabindex="-1" onclick="return show_hide_password(this);"></a>
+                    <i class="fas fa-key"></i>
+                </div>
+                {{ form.password2.errors }}
+                <div class="inputBx">
+                    <input type="submit" value="Register">
+                </div>
+            </form>
+            <p>Already have an account <a href="{% url 'login' %}">Sign in</a></p>
         </div>
-      </div>
-      </div>
+    </div>
+</div>
 
-{% endblock container %}
-
-{% block script %}
-    <script>
-        function show_hide_password(target){
-            var input = document.getElementById('id_password');
-            if (input.getAttribute('type') == 'password') {
-                target.classList.add('view');
-                input.setAttribute('type', 'text');
-            } else {
-                target.classList.remove('view');
-                input.setAttribute('type', 'password');
-            }
-            return false;
+{% endblock container %} {% block script %}
+<script>
+    function show_hide_password(target) {
+        var input = document.getElementById('id_password');
+        if (input.getAttribute('type') == 'password') {
+            target.classList.add('view');
+            input.setAttribute('type', 'text');
+        } else {
+            target.classList.remove('view');
+            input.setAttribute('type', 'password');
         }
-    </script>
+        return false;
+    }
+</script>
 {% endblock script %}

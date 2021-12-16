@@ -1,0 +1,61 @@
+{% extends "main/base.html" %} {% load static %} {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'genre_game/style/game.css' %}"> {% endblock style %} {% block container %}
+
+<div class="sub-container">
+    <div class="sub-container-heading">
+        <h2>Round: {{ game.round }} | Team: {{ game.team.team.teamname }}</h2>
+    </div>
+
+    <div class="sub-container-body-game">
+        <div class="sub-body-game"> {% if not genre %}
+            <div class="sub-container-body-message">
+                No Genre Available
+            </div>
+            {% endif %} {% for g in genre %} {% if g in played_genre %}
+            <div class="single-content-game-grey single-content-game-grey-genre">
+                <h3>{{ g.genre_name }}</h3>
+            </div>{% else %}
+            <a class="single-content-game single-content-game-genre" href="{% url 'genre-update' id=game.id genre=g.id %}">
+                <h3>{{ g.genre_name }}</h3>
+            </a>{% endif %} {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock container %} {% block script %}
+<script>
+    // make POST ajax call
+    function startQuestion(id) {
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'question-update' id=game.id %}",
+            data: {},
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function(response) {
+                document.getElementById(`answer-btn${id}`).style.display = 'none';
+            },
+            error: function(response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+</script> {% endblock script %}}

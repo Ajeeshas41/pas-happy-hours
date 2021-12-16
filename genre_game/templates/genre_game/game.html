@@ -1,0 +1,115 @@
+{% extends "main/base.html" %} {% load static %} {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'genre_game/style/game.css' %}">{% endblock style %} {% block container %}
+
+<div class="sub-container">
+    <div class="sub-container-heading">
+        <h2>Round: {{ game.round }} | Team: {{ game.team.team.teamname }} | Genre: {{ game.genre.genre_name }}</h2>
+    </div>
+    <div class="sub-container-body-game">
+        <div class="sub-body-game"> {% if not questions %}
+            <div class="sub-container-body-message">
+                No Questions Available
+            </div>
+            {% endif %} {% for q in questions %} {% if q.is_locked %}
+            <div class="single-content-game-grey">
+                <h3>{{ forloop.counter }}</h3>
+            </div>{% else %}
+            <div class="single-content-game" onclick="updateQuestion('{{ q.id }}')">
+                <h3>{{ forloop.counter }}</h3>
+            </div>
+            {% endif %} {% endfor %}
+        </div>
+    </div>
+</div>
+{% for q in questions%}
+<div id="open-modal{{ q.id }}" class="modal-window">
+    <div class="modal-main" id="modal-main">
+        <a href="#" title="Close" class="modal-close">Close</a>
+        <h1>{{ q.title }}</h1>
+        {% if q.image_enabled %}
+        <div class="image-div"><img src="{{ q.image.url }}" alt=""></div>
+        {% endif %}
+        <div>{{ q.question }}</div>
+        <div class="game-inputBx" id="get-answer{{ q.id }}">
+            <input type="button" onclick="getAnswers('{{ q.id }}')" value="Get Answer">
+        </div>
+        <div class="modal-answer{{ q.id }}">
+            <div id="oAnswer{{ q.id }}"></div>
+            <div id="iAnswer{{ q.id }}"></div>
+            <div class="answer-btn-wrap" id="answer-btn{{ q.id }}">
+                <a class="answer-btn-a" href="{% url 'lock-game' id=game.id status=1 %}">
+                    <button class="game-inputBx answer-btn answer-btn-right">Correct Answer</button>
+                </a>
+                <a class="answer-btn-a" href="{% url 'lock-game' id=game.id status=0 %}">
+                    <button class="game-inputBx answer-btn answer-btn-wrong">Wrong Answer</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %} {% endblock container %} {% block script %}
+<script>
+    // make POST ajax call
+    function updateQuestion(id) {
+        location.href = `#open-modal${id}`
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'question-update' id=game.id %}",
+            data: {
+                'id': id
+            },
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function(response) {
+                document.getElementById(`answer-btn${id}`).style.display = 'none';
+            },
+            error: function(response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+
+    function getAnswers(id) {
+        parent = document.getElementById(`"modal-answer${id}`);
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'get-answer' id=game.id %}",
+            data: {
+                'id': id
+            },
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function(response) {
+                document.getElementById(`oAnswer${id}`).innerHTML = 'Correct Answer: ' + response.oAnswer;
+                document.getElementById(`iAnswer${id}`).innerHTML = 'Input Answer: ' + response.iAnswer;
+                document.getElementById(`answer-btn${id}`).style.display = 'flex';
+                document.getElementById(`get-answer${id}`).style.display = 'none';
+            },
+            error: function(response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+</script> {% endblock script %}}

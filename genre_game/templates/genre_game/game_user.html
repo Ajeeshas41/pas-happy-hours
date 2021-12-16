@@ -1,0 +1,90 @@
+{% extends "main/base.html" %} {% load static %} {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'genre_game/style/game.css' %}">{% endblock style %} {% block container %}
+
+<div class="sub-container">
+    <div class="sub-container-heading">
+        <h4>Round: {{ game.round }} | Team: {{ game.team.team.teamname }} | Genre: {{ game.genre.genre_name }}</h4>
+    </div>
+    <div class="sub-container-body-game">{% if not game %}
+        <div class="sub-container-body-message">
+            Please wait for your question.
+        </div>
+        {% else %}
+        <div class="sub-body-game">
+            <div class="single-content-game-user">
+                <h1 class="single-content-game-user-item">{{ game.question.title }}</h1>
+                {% if game.question.image_enabled %}
+                <div class="image-div"><img src="{{ game.question.image.url }}" alt=""></div>
+                {% endif %}
+                <div class="single-content-game-user-item">{{ game.question.question }}</div>
+                <div class="game-inputBx single-content-game-user-item">{% if game.answer %}
+                    <input type="text" id="game-answer-field" class="single-content-game-user-item" value="{{ game.answer }}">{% else %}
+                    <input type="text" id="game-answer-field" class="single-content-game-user-item"> {% endif %}
+                </div>
+                <div id="answer-nigo" style="color: brown;"></div>
+                <div id="answer-igo" style="color: rgb(4, 104, 25);"></div>
+                <div class="game-inputBx single-content-game-user-item">
+                    <span>Override:</span>
+                    <input type="checkbox" id="game-override-field" class="single-content-game-user-item">
+                </div>
+                <div class="game-inputBx single-content-game-user-item" id="get-answer{{ game.id }}">
+                    <input type="button" onclick="insertAnswer('{{ game.id }}')" value="Submit Answer">
+                </div>
+            </div>{% endif %}
+        </div>
+    </div> {% endblock container %} {% block script %}
+    <script>
+        // make POST ajax call
+        function insertAnswer(id) {
+            const answer = document.querySelector('#game-answer-field');
+            const override = document.querySelector('#game-override-field').checked;
+            document.querySelector('#answer-nigo').innerHTML = '';
+            document.querySelector('#answer-igo').innerHTML = '';
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'user-answer' %}",
+                data: {
+                    'id': id,
+                    'answer': answer.value,
+                    'override': override,
+                },
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function(response) {
+                    if (response.err != undefined) {
+                        if (response.err == '0') {
+                            location.reload();
+                        } else {
+                            document.querySelector('#answer-nigo').innerHTML = response.err;
+                        }
+                    }
+                    if (response.ok != undefined) {
+                        document.querySelector('#answer-igo').innerHTML = response.ok;
+                    }
+                },
+                error: function(response) {
+                    // alert the error if any error occured
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+    </script> {% endblock script %}}

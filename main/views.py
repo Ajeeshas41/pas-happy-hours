@@ -1,10 +1,13 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.views.generic.base import TemplateView
 
-def home(request):
-    return render(request, 'main/index.html')
 
-def game(request):
-    return render(request, 'main/game.html')
+class HomeView(TemplateView):
+    template_name = 'main/index.html'
 
-def result(request):
-    return render(request, 'main/result.html')
+class SelectGameView(LoginRequiredMixin, TemplateView):
+    template_name = 'main/game.html'
+
+class ResultView(TemplateView):
+    template_name = 'main/result.html'
